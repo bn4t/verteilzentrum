@@ -1,0 +1,11 @@
+[verteilzentrum]
+bind_to = "localhost:25"
+hostname = "localhost"
+read_timeout = 10000
+write_timeout = 10000
+max_message_bytes = 1048576 # 1024 * 1024
+
+[[list]]
+name = "news@lists.example.com"
+whitelist = ["hostmaster@example.com","john@example.com"]
+blacklist = []
