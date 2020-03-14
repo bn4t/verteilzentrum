@@ -9,3 +9,4 @@ max_message_bytes = 1048576 # 1024 * 1024
 name = "news@lists.example.com"
 whitelist = ["hostmaster@example.com","john@example.com"]
 blacklist = []
+can_publish = ["*"]

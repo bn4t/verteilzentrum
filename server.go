@@ -19,7 +19,10 @@ func InitServer() {
 	s.MaxRecipients = 1
 	s.AuthDisabled = true
 
-	log.Println("Starting server at", s.Addr)
+	log.Print("Starting message queue...")
+	go StartMsgQueueRunner()
+
+	log.Print("Starting server at ", s.Addr)
 	if err := s.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}

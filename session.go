@@ -97,15 +97,6 @@ func (s *Session) Data(r io.Reader) error {
 		return nil
 	}
 
-	/*data, err := ioutil.ReadAll(r)
-	if err != nil {
-		return &smtp.SMTPError{
-			Code:         451,
-			EnhancedCode: smtp.EnhancedCode{451},
-			Message:      "Internal server error",
-		}
-	}*/
-
 	subs, err := GetSubscribers(s.List)
 	if err != nil {
 		return &smtp.SMTPError{
@@ -153,8 +144,14 @@ func (s *Session) Data(r io.Reader) error {
 		if s.From == val {
 			continue
 		}
-		// TODO: retry at a later time again if an error occurs
-		log.Print(ForwardMail([]byte(strData), s.List, val))
+
+		// try to send the mail to the subscriber. If this fails queue the message for resending.
+		if err := ForwardMail([]byte(strData), s.List, val); err != nil {
+			if err := AddToMsgQueue(val, s.List, strData); err != nil {
+				log.Print("Error adding message to message queue:")
+				log.Print(err)
+			}
+		}
 	}
 
 	return nil
