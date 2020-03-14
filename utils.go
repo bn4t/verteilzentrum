@@ -9,7 +9,7 @@ func StringInSlice(a string, list []string) bool {
 	return false
 }
 
-// check if a provided list exists
+// check if a provided mailing list exists
 func ListExists(list string) bool {
 	for _, b := range Config.Lists {
 		if b.Name == list {

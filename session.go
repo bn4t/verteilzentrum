@@ -5,6 +5,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"net/mail"
 	"strings"
 )
 
@@ -56,7 +57,7 @@ func (s *Session) Rcpt(to string) error {
 
 			// unsubscribe a user
 			if s.Prefix == "unsubscribe" {
-				err := Unubscribe(s.From, s.List)
+				err := Unsubscribe(s.From, s.List)
 				if err != nil {
 					return &smtp.SMTPError{
 						Code:         451,
@@ -91,20 +92,19 @@ func (s *Session) Rcpt(to string) error {
 }
 
 func (s *Session) Data(r io.Reader) error {
-	if s.Prefix == "subscribe" || s.Prefix == "unsubscribe" {
+	// discard data if it is a subscribe or unsubscribe request or if the mail is bounced
+	if s.Prefix == "subscribe" || s.Prefix == "unsubscribe" || s.Prefix == "bounce" {
 		return nil
 	}
 
-	data, err := ioutil.ReadAll(r)
+	/*data, err := ioutil.ReadAll(r)
 	if err != nil {
 		return &smtp.SMTPError{
 			Code:         451,
 			EnhancedCode: smtp.EnhancedCode{451},
 			Message:      "Internal server error",
 		}
-	}
-
-	log.Print(string(data))
+	}*/
 
 	subs, err := GetSubscribers(s.List)
 	if err != nil {
@@ -115,9 +115,46 @@ func (s *Session) Data(r io.Reader) error {
 		}
 	}
 
+	m, err := mail.ReadMessage(r)
+	if err != nil {
+		return &smtp.SMTPError{
+			Code:         451,
+			EnhancedCode: smtp.EnhancedCode{451},
+			Message:      "Internal server error",
+		}
+	}
+
+	// set mailing list headers
+	m.Header["List-Unsubscribe"] = []string{"<mailto:unsubscribe+" + s.List + ">"}
+	m.Header["List-Post"] = []string{"<mailto:" + s.List + ">"}
+	m.Header["List-Subscribe"] = []string{"<mailto:subscribe+" + s.List + ">"}
+	m.Header["Reply-To"] = []string{s.List}
+	m.Header["Sender"] = []string{"\"" + strings.Split(s.List, "@")[0] + "\"" + " <" + s.List + ">"}
+	m.Header["Return-Path"] = []string{"<bounce+" + s.List + ">"}
+
+	// concat all the mail data
+	var strData string
+	for k, v := range m.Header {
+		strData += k + ": " + strings.Join(v, ",") + "\r\n"
+	}
+	d, err := ioutil.ReadAll(m.Body)
+	if err != nil {
+		return &smtp.SMTPError{
+			Code:         451,
+			EnhancedCode: smtp.EnhancedCode{451},
+			Message:      "Internal server error",
+		}
+	}
+	strData += "\r\n" + string(d)
+
+	log.Print(strData)
+
 	for _, val := range subs {
+		if s.From == val {
+			continue
+		}
 		// TODO: retry at a later time again if an error occurs
-		log.Print(ForwardMail(data, s.From, val))
+		log.Print(ForwardMail([]byte(strData), s.List, val))
 	}
 
 	return nil
