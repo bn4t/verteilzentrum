@@ -17,7 +17,7 @@ func InitServer() {
 	s.ReadTimeout = time.Duration(Config.Verteilzentrum.ReadTimeout) * time.Millisecond
 	s.MaxMessageBytes = Config.Verteilzentrum.MaxMessageBytes
 	s.MaxRecipients = 1
-	s.AllowInsecureAuth = true
+	s.AuthDisabled = true
 
 	log.Println("Starting server at", s.Addr)
 	if err := s.ListenAndServe(); err != nil {
