@@ -14,22 +14,11 @@ func InitDatabase() error {
 		return err
 	}
 
+	// create the table if it doesn't exist yet
 	_, err = DbCon.Exec("CREATE TABLE if not exists subscriber (id integer not null primary key autoincrement, email text not null, list text, unique(email, list));")
 	if err != nil {
 		return err
 	}
-	/*
-		_, err = DbCon.Exec("CREATE TABLE if not exists list (id integer not null primary key autoincrement, name text unique not null);")
-		if err != nil {
-			return err
-		}
-
-		_, err = DbCon.Exec("CREATE TABLE if not exists subscriber_list (id integer not null primary key autoincrement, " +
-			"list_id integer, subscriber_id integer, FOREIGN KEY(list_id) REFERENCES list(id), " +
-			"FOREIGN KEY(subscriber_id) REFERENCES subscriber(id))")
-		if err != nil {
-			return err
-		}*/
 
 	return nil
 }
@@ -65,7 +54,7 @@ func Subscribe(email string, list string) error {
 	return nil
 }
 
-func Unubscribe(email string, list string) error {
+func Unsubscribe(email string, list string) error {
 
 	_, err := DbCon.Exec("INSERT OR IGNORE INTO subscriber (email, list) VALUES ($1, $2);",
 		email, list)
