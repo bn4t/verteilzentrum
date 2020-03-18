@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"github.com/BurntSushi/toml"
 )
 
@@ -22,16 +21,13 @@ type verteilzentrumConfig struct {
 type configuration struct {
 	Verteilzentrum verteilzentrumConfig
 	Lists          []list `toml:"list"`
+	ConfigPath     string
+	DataDir        string
 }
 
 var Config configuration
 
 func ReadConfig() error {
-	var fileName string
-
-	flag.StringVar(&fileName, "config", "./config.toml", "The config file for verteilzentrum.")
-	flag.Parse()
-
-	_, err := toml.DecodeFile(fileName, &Config)
+	_, err := toml.DecodeFile(Config.ConfigPath, &Config)
 	return err
 }

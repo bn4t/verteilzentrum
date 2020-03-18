@@ -3,13 +3,14 @@ package main
 import (
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
+	"path"
 )
 
 var DbCon *sql.DB
 
 func InitDatabase() error {
 	var err error
-	DbCon, err = sql.Open("sqlite3", "./verteilzentrum.db")
+	DbCon, err = sql.Open("sqlite3", path.Join(Config.DataDir+"verteilzentrum.db"))
 	if err != nil {
 		return err
 	}
