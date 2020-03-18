@@ -72,3 +72,7 @@ whitelist = ["postmaster@example.com","admin@example.com"]
 blacklist = []
 can_publish = ["admin@example.com", "postmaster@example.com"]
 ````
+
+## Command line flags
+- `-config <config file>` - The location of the config file to use. Defaults to `config.toml` in the working directory.
+- `-datadir <data directory>` - The location where all persistent data should be stored. Defaults to the working directory.
