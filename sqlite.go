@@ -20,7 +20,7 @@ func InitDatabase() error {
 		return err
 	}
 
-	_, err = DbCon.Exec("CREATE TABLE if not exists msg_queue (id integer not null primary key autoincrement, receiver text not null, list text not null, data text not null);")
+	_, err = DbCon.Exec("CREATE TABLE if not exists msg_queue (id integer not null primary key autoincrement, receiver text not null, list text not null, data text not null, failed_retries integer not null default 1);")
 	if err != nil {
 		return err
 	}
