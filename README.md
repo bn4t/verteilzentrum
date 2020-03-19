@@ -35,7 +35,7 @@ Path to the TLS certificate file.
 ##### tls_key_file
 Path to the corresponding private key to the TLS certificate. 
 
-To disable inbound TLS just comment out the TLS settings.
+To disable inbound TLS just comment out both TLS settings.
 
 #### Example
 ````toml
