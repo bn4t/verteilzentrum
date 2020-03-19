@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func ForwardMail(data []byte, from string, to string) error {
+func SendMail(data []byte, from string, to string) error {
 	var c *smtp.Client
 	domain := strings.Split(to, "@")[1]
 	mx, err := net.LookupMX(domain)

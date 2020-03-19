@@ -30,7 +30,7 @@ func StartMsgQueueRunner() {
 			}
 
 			// if the mail could be sent successfully delete it from the queue
-			if err := ForwardMail([]byte(data), list, data); err == nil {
+			if err := SendMail([]byte(data), list, data); err == nil {
 				_, err := DbCon.Exec("DELETE FROM msg_queue where receiver = $1 and list = $2 and data = $3", recv, list, data)
 				log.Print("Error deleting message from message queue:")
 				log.Print(err)
