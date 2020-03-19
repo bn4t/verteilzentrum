@@ -23,7 +23,7 @@ func InitServer() {
 	log.Print("Starting message queue...")
 	go StartMsgQueueRunner()
 
-	// if tls options are set start tls listener else start plaintext listener
+	// if tls options are set start tls listener
 	if Config.Verteilzentrum.TlsCertFile != "" && Config.Verteilzentrum.TlsKeyFile != "" {
 		var err error
 		if s.TLSConfig, err = LoadTLSCertificate(); err != nil {
