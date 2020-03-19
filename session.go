@@ -17,7 +17,7 @@ type Session struct {
 	Prefix string
 }
 
-func (s *Session) Mail(from string, opts smtp.MailOptions) error {
+func (s *Session) Mail(from string, _ smtp.MailOptions) error {
 	s.From = from
 	return nil
 }
