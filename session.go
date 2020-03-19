@@ -70,12 +70,30 @@ func (s *Session) Rcpt(to string) error {
 						Message:      "Internal server error",
 					}
 				}
+
+				err = SendSubscribeNotif(s.From, s.List)
+				if err != nil {
+					return &smtp.SMTPError{
+						Code:         451,
+						EnhancedCode: smtp.EnhancedCode{451},
+						Message:      "Internal server error",
+					}
+				}
 				return nil
 			}
 
 			// unsubscribe a user
 			if s.Prefix == "unsubscribe" {
 				err := Unsubscribe(s.From, s.List)
+				if err != nil {
+					return &smtp.SMTPError{
+						Code:         451,
+						EnhancedCode: smtp.EnhancedCode{451},
+						Message:      "Internal server error",
+					}
+				}
+
+				err = SendUnsubscribeNotif(s.From, s.List)
 				if err != nil {
 					return &smtp.SMTPError{
 						Code:         451,
@@ -134,7 +152,6 @@ func (s *Session) Data(r io.Reader) error {
 	m.Header["List-Subscribe"] = []string{"<mailto:subscribe+" + s.List + ">"}
 	m.Header["Reply-To"] = []string{s.List}
 	m.Header["Sender"] = []string{"\"" + strings.Split(s.List, "@")[0] + "\"" + " <" + s.List + ">"}
-	m.Header["Return-Path"] = []string{"<bounce+" + s.List + ">"}
 
 	// concat all the mail data
 	var strData string
@@ -157,8 +174,8 @@ func (s *Session) Data(r io.Reader) error {
 		}
 
 		// try to send the mail to the subscriber. If this fails queue the message for resending.
-		if err := ForwardMail([]byte(strData), s.List, val); err != nil {
-			if err := AddToMsgQueue(val, s.List, strData); err != nil {
+		if err := SendMail([]byte(strData), "bounce+"+s.List, val); err != nil {
+			if err := AddToMsgQueue(val, "bounce+"+s.List, strData); err != nil {
 				log.Print("Error adding message to message queue:")
 				log.Print(err)
 			}
