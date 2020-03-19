@@ -61,7 +61,7 @@ func Subscribe(email string, list string) error {
 
 func Unsubscribe(email string, list string) error {
 
-	_, err := DbCon.Exec("INSERT OR IGNORE INTO subscriber (email, list) VALUES ($1, $2);",
+	_, err := DbCon.Exec("DELETE FROM subscriber WHERE email = $1 and list= $2;",
 		email, list)
 	if err != nil {
 		return err
