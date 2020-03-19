@@ -52,7 +52,7 @@ Lists are represented toml tables in an array.
 ##### name 
 The name of the list which also serves as the list address.
 ##### whitelist
-Array of whitelisted email addresses which are allowed to subscribe to the list. Supports wildcards.
+Array of whitelisted email addresses which are allowed to interact with the list. Supports wildcards.
 
 If empty the whitelist is disabled.
 ##### blacklist
