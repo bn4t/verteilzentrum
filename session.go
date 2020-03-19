@@ -42,6 +42,24 @@ func (s *Session) Rcpt(to string) error {
 	for _, list := range Config.Lists {
 		if list.Name == s.List {
 
+			// check if the sender is blacklisted
+			if StringInSlice(s.From, list.Blacklist) || StringInSlice("*", list.Blacklist) {
+				return &smtp.SMTPError{
+					Code:         550,
+					EnhancedCode: smtp.EnhancedCode{550},
+					Message:      "You are blacklisted on this list",
+				}
+			}
+
+			// check if a whitelist exists and if yes if the sender is whitelisted
+			if len(list.Whitelist) > 0 && !StringInSlice(s.From, list.Whitelist) && !StringInSlice("*", list.Whitelist) {
+				return &smtp.SMTPError{
+					Code:         550,
+					EnhancedCode: smtp.EnhancedCode{550},
+					Message:      "You are not whitelisted on this list",
+				}
+			}
+
 			// add a user as a subscriber
 			if s.Prefix == "subscribe" {
 				err := Subscribe(s.From, s.List)
@@ -67,24 +85,6 @@ func (s *Session) Rcpt(to string) error {
 				}
 				return nil
 			}
-
-			// check if the sender is blacklisted
-			if StringInSlice(s.From, list.Blacklist) {
-				return &smtp.SMTPError{
-					Code:         550,
-					EnhancedCode: smtp.EnhancedCode{550},
-					Message:      "You are blacklisted on this list",
-				}
-			}
-
-			// check if a whitelist exists and if yes if the sender is whitelisted
-			if len(list.Whitelist) > 0 && !StringInSlice(s.From, list.Whitelist) {
-				return &smtp.SMTPError{
-					Code:         550,
-					EnhancedCode: smtp.EnhancedCode{550},
-					Message:      "You are not whitelisted on this list",
-				}
-			}
 		}
 	}
 
@@ -95,6 +95,19 @@ func (s *Session) Data(r io.Reader) error {
 	// discard data if it is a subscribe or unsubscribe request or if the mail is bounced
 	if s.Prefix == "subscribe" || s.Prefix == "unsubscribe" || s.Prefix == "bounce" {
 		return nil
+	}
+
+	for _, list := range Config.Lists {
+		if list.Name == s.List {
+			// check if the sender is allowed to publish on this list
+			if !StringInSlice(s.From, list.CanPublish) && !StringInSlice("*", list.CanPublish) {
+				return &smtp.SMTPError{
+					Code:         550,
+					EnhancedCode: smtp.EnhancedCode{550},
+					Message:      "You are not allowed to publish on this list",
+				}
+			}
+		}
 	}
 
 	subs, err := GetSubscribers(s.List)
@@ -137,8 +150,6 @@ func (s *Session) Data(r io.Reader) error {
 		}
 	}
 	strData += "\r\n" + string(d)
-
-	log.Print(strData)
 
 	for _, val := range subs {
 		if s.From == val {

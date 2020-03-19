@@ -5,9 +5,10 @@ import (
 )
 
 type list struct {
-	Name      string
-	Whitelist []string
-	Blacklist []string
+	Name       string
+	Whitelist  []string
+	Blacklist  []string
+	CanPublish []string `toml:"can_publish"`
 }
 
 type verteilzentrumConfig struct {
