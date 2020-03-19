@@ -18,7 +18,7 @@ Verteilzentrum is a minimalistic mailing list following the [KISS](https://en.wi
 The IP address to bind to including port number.
 
 ##### hostname
-The hostname of the list server.
+The hostname of the list server. If you specify a TLS certificate it has to be valid for this hostname.
 
 ##### read_timeout
 SMTP read timeout in milliseconds.
@@ -29,14 +29,24 @@ SMTP write timeout in milliseconds.
 ##### max_message_bytes
 Maximum incoming message size in bytes.
 
+##### tls_cert_file
+Path to the TLS certificate file.
+
+##### tls_key_file
+Path to the corresponding private key to the TLS certificate. 
+
+To disable inbound TLS just comment out the TLS settings.
+
 #### Example
 ````toml
 [verteilzentrum]
-bind_to = "1.2.3.4:25" # ip address to bind to
-hostname = "lists.example.com" # hostname of the list server
+bind_to = "1.2.3.4:25"
+hostname = "lists.example.com"
 read_timeout = 100000
 write_timeout = 100000
 max_message_bytes = 1048576 # 1024 * 1024
+tls_cert_file = "/some/path/cert.pem"
+tls_key_file = "/some/path/key.pem"
 ````
 
 ## Lists

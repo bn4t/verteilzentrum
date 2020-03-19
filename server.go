@@ -22,8 +22,21 @@ func InitServer() {
 	log.Print("Starting message queue...")
 	go StartMsgQueueRunner()
 
-	log.Print("Starting server at ", s.Addr)
-	if err := s.ListenAndServe(); err != nil {
-		log.Fatal(err)
+	// if tls options are set start tls listener else start plaintext listener
+	if Config.Verteilzentrum.TlsCertFile != "" && Config.Verteilzentrum.TlsKeyFile != "" {
+		var err error
+		if s.TLSConfig, err = LoadTLSCertificate(); err != nil {
+			log.Fatal(err)
+		}
+
+		log.Print("Starting TLS listener at ", s.Addr)
+		if err := s.ListenAndServeTLS(); err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		log.Print("Starting plaintext listener at ", s.Addr)
+		if err := s.ListenAndServe(); err != nil {
+			log.Fatal(err)
+		}
 	}
 }

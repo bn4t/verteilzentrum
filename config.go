@@ -14,9 +14,11 @@ type list struct {
 type verteilzentrumConfig struct {
 	BinTo           string `toml:"bind_to"`
 	Hostname        string
-	ReadTimeout     int `toml:"read_timeout"`
-	WriteTimeout    int `toml:"write_timeout"`
-	MaxMessageBytes int `toml:"max_message_bytes"`
+	ReadTimeout     int    `toml:"read_timeout"`
+	WriteTimeout    int    `toml:"write_timeout"`
+	MaxMessageBytes int    `toml:"max_message_bytes"`
+	TlsCertFile     string `toml:"tls_cert_file"`
+	TlsKeyFile      string `toml:"tls_key_file"`
 }
 
 type configuration struct {
