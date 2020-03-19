@@ -14,9 +14,6 @@ Verteilzentrum is a minimalistic mailing list following the [KISS](https://en.wi
 # Config
 ## General options
 
-##### bind_to
-The IP address to bind to including port number.
-
 ##### hostname
 The hostname of the list server. If you specify a TLS certificate it has to be valid for this hostname.
 
@@ -40,7 +37,6 @@ To disable inbound TLS just comment out both TLS settings.
 #### Example
 ````toml
 [verteilzentrum]
-bind_to = "1.2.3.4:25"
 hostname = "lists.example.com"
 read_timeout = 100000
 write_timeout = 100000

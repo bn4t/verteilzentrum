@@ -64,6 +64,8 @@ func (s *Session) Rcpt(to string) error {
 			if s.Prefix == "subscribe" {
 				err := Subscribe(s.From, s.List)
 				if err != nil {
+					log.Print("Error while trying to subscribe user " + s.From + " to list " + s.List + ": ")
+					log.Print(err)
 					return &smtp.SMTPError{
 						Code:         451,
 						EnhancedCode: smtp.EnhancedCode{451},
@@ -73,6 +75,8 @@ func (s *Session) Rcpt(to string) error {
 
 				err = SendSubscribeNotif(s.From, s.List)
 				if err != nil {
+					log.Print("Error while sending subscribe confirmation to user " + s.From + " for list " + s.List + ": ")
+					log.Print(err)
 					return &smtp.SMTPError{
 						Code:         451,
 						EnhancedCode: smtp.EnhancedCode{451},
@@ -86,6 +90,8 @@ func (s *Session) Rcpt(to string) error {
 			if s.Prefix == "unsubscribe" {
 				err := Unsubscribe(s.From, s.List)
 				if err != nil {
+					log.Print("Error while trying to unsubscribe user " + s.From + " from list " + s.List + ": ")
+					log.Print(err)
 					return &smtp.SMTPError{
 						Code:         451,
 						EnhancedCode: smtp.EnhancedCode{451},
@@ -95,6 +101,8 @@ func (s *Session) Rcpt(to string) error {
 
 				err = SendUnsubscribeNotif(s.From, s.List)
 				if err != nil {
+					log.Print("Error while sending unsubscribe confirmation to user " + s.From + " for list " + s.List + ": ")
+					log.Print(err)
 					return &smtp.SMTPError{
 						Code:         451,
 						EnhancedCode: smtp.EnhancedCode{451},

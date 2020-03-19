@@ -1,5 +1,4 @@
 [verteilzentrum]
-bind_to = "localhost:25"
 hostname = "localhost"
 read_timeout = 10000
 write_timeout = 10000
