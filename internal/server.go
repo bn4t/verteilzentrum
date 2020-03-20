@@ -27,7 +27,30 @@ import (
 
 func InitServer() {
 	rand.Seed(time.Now().UTC().UnixNano())
-	be := &Backend{}
+
+	log.Print("Starting message queue...")
+	go StartMsgQueueRunner()
+
+	// if tls options are set start tls listener
+	if Config.Verteilzentrum.TlsCertFile != "" && Config.Verteilzentrum.TlsKeyFile != "" {
+		go func() {
+			log.Print("Starting TLS listener...")
+			s := createNewServer()
+			if err := s.ListenAndServeTLS(); err != nil {
+				log.Fatal(err)
+			}
+		}()
+	}
+	log.Print("Starting plaintext listener...")
+	s := createNewServer()
+	if err := s.ListenAndServe(); err != nil {
+		log.Fatal(err)
+	}
+
+}
+
+func createNewServer() *smtp.Server {
+	be := new(Backend)
 
 	s := smtp.NewServer(be)
 
@@ -38,26 +61,12 @@ func InitServer() {
 	s.MaxRecipients = 1
 	s.AuthDisabled = true
 
-	log.Print("Starting message queue...")
-	go StartMsgQueueRunner()
-
-	// if tls options are set start tls listener
+	// add the tls config also to the non-tls listener to support STARTTLS
 	if Config.Verteilzentrum.TlsCertFile != "" && Config.Verteilzentrum.TlsKeyFile != "" {
 		var err error
 		if s.TLSConfig, err = LoadTLSCertificate(); err != nil {
 			log.Fatal(err)
 		}
-		go func() {
-			log.Print("Starting TLS listener...", s.Addr)
-			if err := s.ListenAndServeTLS(); err != nil {
-				log.Fatal(err)
-			}
-		}()
-
 	}
-	log.Print("Starting plaintext listener...", s.Addr)
-	if err := s.ListenAndServe(); err != nil {
-		log.Fatal(err)
-	}
-
+	return s
 }
