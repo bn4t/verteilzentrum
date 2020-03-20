@@ -1,0 +1,20 @@
+[Unit]
+Description=A minimalistic mailing list
+Documentation=https://git.bn4t.me/bn4t/verteilzentrum/src/branch/master/README.md
+After=network.target
+
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/verteilzentrum -config /etc/verteilzentrum/config.toml -datadir /var/lib/verteilzentrum
+ExecStop=/bin/kill -s QUIT $MAINPID
+PrivateTmp=true
+PrivateUsers=true
+User=verteilzentrum
+Group=verteilzentrum
+RestartSec=1
+TimeoutStartSec=1m
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
