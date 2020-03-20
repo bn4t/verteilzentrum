@@ -11,6 +11,18 @@ Verteilzentrum is a minimalistic mailing list following the [KISS](https://en.wi
 - Whitelisting
 - Configurable publishing rights
 
+# Installation
+0. Install golang (>=1.14), gcc, make and build-essential if you don't have them already
+1. Clone the repository: `git clone https://git.bn4t.me/bn4t/verteilzentrum.git`
+2. Checkout the latest stable tag 
+3. Run `make build` to build the verteilzentrum binary
+4. Run `sudo make install` to install verteilzentrum on your system. This will create the directories `/etc/verteilzentrum` (config directory) and `/var/lib/verteilzentrum` (data directory). Additionally the user `verteilzentrum` will be created.
+5. If you have systemd installed you can run `sudo make install-systemd` to install the systemd service. Run `service verteilzentrum start` to start the verteilzentrum service. Verteilzentrum will automatically run as the `verteilzentrum` user.
+
+You can make other certificates and private key files accessible to the `verteilzentrum` user with the following command:
+````shell script
+setfacl -m u:verteilzentrum:rx /etc/letsencrypt/ 
+````
 # Config
 ## General options
 

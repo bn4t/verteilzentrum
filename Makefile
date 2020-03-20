@@ -23,8 +23,6 @@ GOFLAGS?=
 RM?=rm -f # Exists in GNUMake but not in NetBSD make and others.
 
 
-all: build
-
 build:
 > $(GO) build $(GOFLAGS) -o verteilzentrum .
 
@@ -32,10 +30,20 @@ run: build
 > ./verteilzentrum
 
 install: build
-> install -m755 verteilzentrum $(BINDIR)/verteilzentrum
+> useradd -MUr verteilzentrum
+> install -m755 -gverteilzentrum -overteilzentrum verteilzentrum $(BINDIR)/verteilzentrum
+> setcap 'cap_net_bind_service=+ep' $(BINDIR)/verteilzentrum # allow verteilzentrum to bind to priviledged ports as non-root user
+> mkdir -p /etc/verteilzentrum
+> mkdir -p /var/lib/verteilzentrum
+> chown -R verteilzentrum:verteilzentrum /etc/verteilzentrum
+> chown -R verteilzentrum:verteilzentrum /var/lib/verteilzentrum
 > if [ ! -f "/etc/verteilzentrum/config.toml" ]; then
->   install -m600 configs/config.example.toml /etc/verteilzentrum/config.toml
+>   install -m600 -gverteilzentrum -overteilzentrum configs/config.example.toml /etc/verteilzentrum/config.toml
 > fi
+
+install-systemd:
+> install -m644 -groot -oroot init/verteilzentrum.service /etc/systemd/system/verteilzentrum.service
+> systemctl daemon-reload
 
 clean:
 > $(RM) verteilzentrum
@@ -50,7 +58,8 @@ fi'
 uninstall:
 > $(RM) $(BINDIR)/verteilzentrum
 > $(RMDIR_IF_EMPTY) /etc/verteilzentrum
+> $(RMDIR_IF_EMPTY) /var/lib/verteilzentrum
 
-.DEFAULT_GOAL = all
-.PHONY: all build install uninstall clean
+.DEFAULT_GOAL = build
+.PHONY: all build install uninstall clean install-systemd
 
