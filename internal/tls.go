@@ -16,17 +16,17 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package main
+package internal
 
-import "github.com/emersion/go-smtp"
+import (
+	"crypto/tls"
+)
 
-type Backend struct{}
-
-// we don't support authenticated logins
-func (bkd *Backend) Login(_ *smtp.ConnectionState, _, _ string) (smtp.Session, error) {
-	return nil, smtp.ErrAuthUnsupported
-}
-
-func (bkd *Backend) AnonymousLogin(state *smtp.ConnectionState) (smtp.Session, error) {
-	return &Session{}, nil
+// load the specified tls certificate and key and return the corresponding tls config
+func LoadTLSCertificate() (*tls.Config, error) {
+	cert, err := tls.LoadX509KeyPair(Config.Verteilzentrum.TlsCertFile, Config.Verteilzentrum.TlsKeyFile)
+	if err != nil {
+		return &tls.Config{}, err
+	}
+	return &tls.Config{Certificates: []tls.Certificate{cert}}, nil
 }

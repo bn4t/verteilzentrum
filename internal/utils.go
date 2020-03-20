@@ -16,17 +16,40 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package main
+package internal
 
 import (
-	"crypto/tls"
+	"crypto/sha256"
+	"encoding/hex"
+	"math/rand"
+	"strconv"
 )
 
-// load the specified tls certificate and key and return the corresponding tls config
-func LoadTLSCertificate() (*tls.Config, error) {
-	cert, err := tls.LoadX509KeyPair(Config.Verteilzentrum.TlsCertFile, Config.Verteilzentrum.TlsKeyFile)
-	if err != nil {
-		return &tls.Config{}, err
+func StringInSlice(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
 	}
-	return &tls.Config{Certificates: []tls.Certificate{cert}}, nil
+	return false
+}
+
+// check if a provided mailing list exists
+func ListExists(list string) bool {
+	for _, b := range Config.Lists {
+		if b.Name == list {
+			return true
+		}
+	}
+	return false
+}
+
+func GenerateMessageId(receiver string) string {
+	var randnums string
+	for i := 0; i < 20; i++ {
+		randnums += strconv.Itoa(rand.Int())
+	}
+
+	hash := sha256.Sum256([]byte(receiver + randnums))
+	return "<" + hex.EncodeToString(hash[:32]) + "@" + Config.Verteilzentrum.Hostname + ">"
 }

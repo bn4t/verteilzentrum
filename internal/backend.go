@@ -16,40 +16,17 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package main
+package internal
 
-import (
-	"crypto/sha256"
-	"encoding/hex"
-	"math/rand"
-	"strconv"
-)
+import "github.com/emersion/go-smtp"
 
-func StringInSlice(a string, list []string) bool {
-	for _, b := range list {
-		if b == a {
-			return true
-		}
-	}
-	return false
+type Backend struct{}
+
+// we don't support authenticated logins
+func (bkd *Backend) Login(_ *smtp.ConnectionState, _, _ string) (smtp.Session, error) {
+	return nil, smtp.ErrAuthUnsupported
 }
 
-// check if a provided mailing list exists
-func ListExists(list string) bool {
-	for _, b := range Config.Lists {
-		if b.Name == list {
-			return true
-		}
-	}
-	return false
-}
-
-func GenerateMessageId(receiver string) string {
-	var randnums string
-	for i := 0; i < 20; i++ {
-		randnums += strconv.Itoa(rand.Int())
-	}
-
-	hash := sha256.Sum256([]byte(receiver + randnums))
-	return "<" + hex.EncodeToString(hash[:32]) + "@" + Config.Verteilzentrum.Hostname + ">"
+func (bkd *Backend) AnonymousLogin(state *smtp.ConnectionState) (smtp.Session, error) {
+	return &Session{}, nil
 }

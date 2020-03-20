@@ -21,20 +21,21 @@ package main
 import (
 	"flag"
 	"log"
+	"verteilzentrum/internal"
 )
 
 func main() {
-	flag.StringVar(&Config.ConfigPath, "config", "./config.toml", "The config file for verteilzentrum.")
-	flag.StringVar(&Config.DataDir, "datadir", "./", "The location where all persistent data is stored.")
+	flag.StringVar(&internal.Config.ConfigPath, "config", "./config.toml", "The config file for verteilzentrum.")
+	flag.StringVar(&internal.Config.DataDir, "datadir", "./", "The location where all persistent data is stored.")
 	flag.Parse()
 
-	if err := ReadConfig(); err != nil {
+	if err := internal.ReadConfig(); err != nil {
 		log.Fatal(err)
 	}
 
-	if err := InitDatabase(); err != nil {
+	if err := internal.InitDatabase(); err != nil {
 		log.Fatal(err)
 	}
 
-	InitServer()
+	internal.InitServer()
 }
