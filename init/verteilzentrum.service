@@ -12,7 +12,6 @@ ExecStop=/bin/kill -s QUIT $MAINPID
 PrivateTmp=true
 ProtectHome=true
 ProtectSystem=true
-ProtectClock=true
 ProtectKernelTunables=true
 PrivateDevices=true
 User=verteilzentrum
