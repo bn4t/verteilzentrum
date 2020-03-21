@@ -41,6 +41,9 @@ Send an email (content doesn't matter) to `unsubscribe+$list_name`. E.g. `unsubs
 You will receive a confirmation email that unsubscribing was successful.
 
 # Config
+
+By default the config is located at `/etc/verteilzentrum/config.toml`.
+
 ## General options
 
 ##### hostname
