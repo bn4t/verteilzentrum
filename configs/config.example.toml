@@ -1,14 +1,19 @@
 [verteilzentrum]
-hostname = "localhost"
+hostname = "lists.example.com"
 read_timeout = 10000
 write_timeout = 10000
 max_message_bytes = 1048576 # 1024 * 1024
 tls_cert_file = "/some/path/cert.pem"
 tls_key_file = "/some/path/key.pem"
 
-
 [[list]]
-name = "news@lists.example.com"
+name = "private-list@lists.example.com"
 whitelist = ["hostmaster@example.com","john@example.com"]
 blacklist = []
-can_publish = ["*"]
+can_publish = ["hostmaster@example.com"]
+
+[[list]]
+name = "public-list@lists.example.com"
+whitelist = []
+blacklist = ["spam@example.com"]
+can_publish = ["moderator@example.com", "admin@example.com"]
