@@ -18,7 +18,7 @@ endif
 PREFIX?=/usr/local
 _INSTDIR=$(DESTDIR)$(PREFIX)
 BINDIR?=$(_INSTDIR)/bin
-GO?=go
+GO?=/usr/local/go/bin/go
 GOFLAGS?=
 RM?=rm -f # Exists in GNUMake but not in NetBSD make and others.
 
@@ -38,7 +38,7 @@ install: build
 > chown -R verteilzentrum:verteilzentrum /etc/verteilzentrum
 > chown -R verteilzentrum:verteilzentrum /var/lib/verteilzentrum
 > if [ ! -f "/etc/verteilzentrum/config.toml" ]; then
->   install -m600 -gverteilzentrum -overteilzentrum configs/config.example.toml /etc/verteilzentrum/config.toml
+> 	install -m600 -gverteilzentrum -overteilzentrum configs/config.example.toml /etc/verteilzentrum/config.toml
 > fi
 
 install-systemd:
