@@ -23,6 +23,23 @@ You can make other certificates and private key files accessible to the `verteil
 ````shell script
 setfacl -m u:verteilzentrum:rx /etc/letsencrypt/ 
 ````
+
+#### Increasing deliverability
+To increase deliverability it is recommended to set up an [SPF](https://en.wikipedia.org/wiki/Sender_Policy_Framework) and [DMARC](https://en.wikipedia.org/wiki/DMARC) record. 
+
+
+# How to use
+
+#### Subscribing to a list
+Send an email (content doesn't matter) to `subscribe+$list_name`. E.g. `subscribe+news@lists.example.com`.
+
+You will receive a confirmation email that subscribing was successful.
+
+#### Unsubscribing from a list
+Send an email (content doesn't matter) to `unsubscribe+$list_name`. E.g. `unsubscribe+news@lists.example.com`.
+
+You will receive a confirmation email that unsubscribing was successful.
+
 # Config
 ## General options
 
@@ -90,6 +107,9 @@ whitelist = ["postmaster@example.com","admin@example.com"]
 blacklist = []
 can_publish = ["admin@example.com", "postmaster@example.com"]
 ````
+
+
+For further examples take a look at the [example config](configs/config.example.toml).
 
 ## Command line flags
 - `-config <config file>` - The location of the config file to use. Defaults to `config.toml` in the working directory.
