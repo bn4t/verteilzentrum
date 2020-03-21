@@ -21,6 +21,9 @@ package main
 import (
 	"flag"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 	"verteilzentrum/internal"
 )
 
@@ -38,4 +41,17 @@ func main() {
 	}
 
 	internal.InitServer()
+
+	sigc := make(chan os.Signal, 1)
+	signal.Notify(sigc,
+		os.Interrupt,
+		syscall.SIGINT,
+		syscall.SIGTERM,
+		syscall.SIGQUIT)
+
+	<-sigc
+	log.Print("Stopping server gracefully...")
+	for _, val := range internal.Servers {
+		val.Close()
+	}
 }

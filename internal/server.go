@@ -25,6 +25,8 @@ import (
 	"time"
 )
 
+var Servers []*smtp.Server
+
 func InitServer() {
 	rand.Seed(time.Now().UTC().UnixNano())
 
@@ -41,11 +43,13 @@ func InitServer() {
 			}
 		}()
 	}
-	log.Print("Starting plaintext listener...")
-	s := createNewServer()
-	if err := s.ListenAndServe(); err != nil {
-		log.Fatal(err)
-	}
+	go func() {
+		log.Print("Starting plaintext listener...")
+		s := createNewServer()
+		if err := s.ListenAndServe(); err != nil {
+			log.Fatal(err)
+		}
+	}()
 
 }
 
@@ -68,5 +72,8 @@ func createNewServer() *smtp.Server {
 			log.Fatal(err)
 		}
 	}
+
+	Servers = append(Servers, s)
+
 	return s
 }
