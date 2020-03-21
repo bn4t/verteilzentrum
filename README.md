@@ -115,5 +115,8 @@ For further examples take a look at the [example config](configs/config.example.
 - `-config <config file>` - The location of the config file to use. Defaults to `config.toml` in the working directory.
 - `-datadir <data directory>` - The location where all persistent data is stored. Defaults to the working directory.
 
+# Contributing
+Feel free to send patches to me@bn4t.me or to open pull requests on Github. 
+
 # License
 This project is licensed under the GPL version 3 and later. See the [LICENSE](LICENSE) file. 
