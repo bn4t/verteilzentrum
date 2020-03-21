@@ -28,7 +28,7 @@ func SendSubscribeNotif(receiver string, list string) error {
 		"To: " + receiver + "\r\n" +
 		"Subject: " + list + " subscription\r\n" +
 		"Mime-Version: 1.0\r\n" +
-		"Date: " + time.Now().UTC().Format(time.RFC1123) + "\r\n" +
+		"Date: " + time.Now().UTC().Format(time.RFC1123Z) + "\r\n" +
 		"Content-Type: text/plain\r\n" +
 		"Message-Id: " + GenerateMessageId(receiver) + "\r\n" +
 		"\r\n" +
@@ -50,7 +50,7 @@ func SendUnsubscribeNotif(receiver string, list string) error {
 		"To: " + receiver + "\r\n" +
 		"Subject: " + list + " subscription\r\n" +
 		"Mime-Version: 1.0\r\n" +
-		"Date: " + time.Now().UTC().Format(time.RFC1123) + "\r\n" +
+		"Date: " + time.Now().UTC().Format(time.RFC1123Z) + "\r\n" +
 		"Content-Type: text/plain\r\n" +
 		"\r\n" +
 		"Hi,\r\n\r\nYou are now successfully unsubscribed from " + list + ".\r\n\r\n" +
