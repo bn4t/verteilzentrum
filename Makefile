@@ -18,7 +18,7 @@ endif
 PREFIX?=/usr/local
 _INSTDIR=$(DESTDIR)$(PREFIX)
 BINDIR?=$(_INSTDIR)/bin
-GO?=/usr/local/go/bin/go
+GO?=go
 GOFLAGS?=
 RM?=rm -f # Exists in GNUMake but not in NetBSD make and others.
 
@@ -60,6 +60,11 @@ uninstall:
 > $(RMDIR_IF_EMPTY) /etc/verteilzentrum
 > $(RMDIR_IF_EMPTY) /var/lib/verteilzentrum
 
+uninstall-systemd:
+> systemctl stop verteilzentrum
+> $(RM) /etc/systemd/system/verteilzentrum.service
+> systemctl daemon-reload
+
 .DEFAULT_GOAL = build
-.PHONY: all build install uninstall clean install-systemd
+.PHONY: all build install uninstall clean install-systemd uninstall-systemd
 

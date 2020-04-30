@@ -15,7 +15,7 @@ Verteilzentrum is a minimalistic mailing list following the [KISS](https://en.wi
 0. Install golang (>=1.14), gcc, make and build-essential if you don't have them already
 1. Clone the repository: `git clone https://git.bn4t.me/bn4t/verteilzentrum.git`
 2. Checkout the latest stable tag 
-3. Run `make build` to build the verteilzentrum binary
+3. Make sure `go` is in your `$PATH` and run `make build` to build the verteilzentrum binary
 4. Run `sudo make install` to install verteilzentrum on your system. This will create the directories `/etc/verteilzentrum` (config directory) and `/var/lib/verteilzentrum` (data directory). Additionally the user `verteilzentrum` will be created.
 5. If you have systemd installed you can run `sudo make install-systemd` to install the systemd service. Run `service verteilzentrum start` to start the verteilzentrum service. Verteilzentrum will automatically run as the `verteilzentrum` user.
 
@@ -117,6 +117,12 @@ For further examples take a look at the [example config](configs/config.example.
 ## Command line flags
 - `-config <config file>` - The location of the config file to use. Defaults to `config.toml` in the working directory.
 - `-datadir <data directory>` - The location where all persistent data is stored. Defaults to the working directory.
+
+# Deinstallation
+Run `sudo make uninstall` to uninstall verteilzentrum. 
+This will remove the verteilzentrum binary and the directories `/etc/verteilzentrum` and `/var/lib/verteilzentrum` if they are empty.
+
+To remove the systemd service run `sudo make uninstall-systemd`.
 
 # Contributing
 Feel free to send patches to me@bn4t.me or to open pull requests on Github. 
