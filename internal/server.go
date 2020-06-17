@@ -62,7 +62,6 @@ func createNewServer() *smtp.Server {
 	s.WriteTimeout = time.Duration(Config.Verteilzentrum.WriteTimeout) * time.Millisecond
 	s.ReadTimeout = time.Duration(Config.Verteilzentrum.ReadTimeout) * time.Millisecond
 	s.MaxMessageBytes = Config.Verteilzentrum.MaxMessageBytes
-	s.MaxRecipients = 1
 	s.AuthDisabled = true
 
 	// add the tls config also to the non-tls listener to support STARTTLS
