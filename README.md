@@ -46,6 +46,16 @@ By default the config is located at `/etc/verteilzentrum/config.toml`.
 
 ## General options
 
+##### bind_to
+The address including port on which the server should listen for non tls connections.
+Listens by default on `0.0.0.0:25`.
+
+##### bind_to_tls
+The address including port on which the server should listen for tls connections.
+Can be left empty if no tls certificates are configured.
+
+Listens by default on `0.0.0.0:465`.
+
 ##### hostname
 The hostname of the list server. If you specify a TLS certificate it has to be valid for this hostname.
 
@@ -69,6 +79,8 @@ To disable inbound TLS just comment out both TLS settings.
 #### Example
 ````toml
 [verteilzentrum]
+bind_to = "0.0.0.0:25"
+bind_to_tls = "0.0.0.0:465"
 hostname = "lists.example.com"
 read_timeout = 100000
 write_timeout = 100000

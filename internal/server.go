@@ -67,12 +67,14 @@ func createNewServer() *smtp.Server {
 	// add the tls config also to the non-tls listener to support STARTTLS
 	if Config.Verteilzentrum.TlsCertFile != "" && Config.Verteilzentrum.TlsKeyFile != "" {
 		var err error
+		s.Addr = Config.Verteilzentrum.BindToTls
 		if s.TLSConfig, err = LoadTLSCertificate(); err != nil {
 			log.Fatal(err)
 		}
+	} else {
+		s.Addr = Config.Verteilzentrum.BindTo
 	}
 
 	Servers = append(Servers, s)
-
 	return s
 }

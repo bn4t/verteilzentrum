@@ -30,8 +30,9 @@ type list struct {
 }
 
 type verteilzentrumConfig struct {
-	BinTo           string `toml:"bind_to"`
-	Hostname        string
+	BindTo          string `toml:"bind_to"`
+	BindToTls       string `toml:"bind_to_tls"`
+	Hostname        string `toml:"hostname"`
 	ReadTimeout     int    `toml:"read_timeout"`
 	WriteTimeout    int    `toml:"write_timeout"`
 	MaxMessageBytes int    `toml:"max_message_bytes"`
