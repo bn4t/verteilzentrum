@@ -19,7 +19,9 @@
 package internal
 
 import (
+	"errors"
 	"github.com/BurntSushi/toml"
+	"os"
 )
 
 type list struct {
