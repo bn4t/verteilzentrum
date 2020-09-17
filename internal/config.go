@@ -23,9 +23,9 @@ import (
 )
 
 type list struct {
-	Name       string
-	Whitelist  []string
-	Blacklist  []string
+	Name       string   `toml:"name"`
+	Whitelist  []string `toml:"whitelist"`
+	Blacklist  []string `toml:"blacklist"`
 	CanPublish []string `toml:"can_publish"`
 }
 
@@ -38,18 +38,18 @@ type verteilzentrumConfig struct {
 	MaxMessageBytes int    `toml:"max_message_bytes"`
 	TlsCertFile     string `toml:"tls_cert_file"`
 	TlsKeyFile      string `toml:"tls_key_file"`
+	DataDir         string `toml:"data_dir"`
 }
 
 type configuration struct {
 	Verteilzentrum verteilzentrumConfig
 	Lists          []list `toml:"list"`
 	ConfigPath     string
-	DataDir        string
 }
 
-var Config configuration
+var Config *configuration
 
 func ReadConfig() error {
-	_, err := toml.DecodeFile(Config.ConfigPath, &Config)
+	_, err := toml.DecodeFile(Config.ConfigPath, Config)
 	return err
 }

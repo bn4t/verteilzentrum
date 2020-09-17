@@ -7,6 +7,7 @@ write_timeout = 10000
 max_message_bytes = 1048576 # 1024 * 1024
 tls_cert_file = "/some/path/cert.pem"
 tls_key_file = "/some/path/key.pem"
+data_dir = "/var/lib/verteilzentrum"
 
 [[list]]
 name = "private-list@lists.example.com"

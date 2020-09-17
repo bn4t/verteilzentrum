@@ -7,7 +7,7 @@ StartLimitIntervalSec=10
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/verteilzentrum -config /etc/verteilzentrum/config.toml -datadir /var/lib/verteilzentrum/
+ExecStart=/usr/local/bin/verteilzentrum -config /etc/verteilzentrum/config.toml
 ExecStop=/bin/kill -s QUIT $MAINPID
 PrivateTmp=true
 ProtectHome=true

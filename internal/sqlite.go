@@ -28,7 +28,7 @@ var DbCon *sql.DB
 
 func InitDatabase() error {
 	var err error
-	DbCon, err = sql.Open("sqlite3", path.Join(Config.DataDir+"verteilzentrum.db"))
+	DbCon, err = sql.Open("sqlite3", path.Join(Config.Verteilzentrum.DataDir+"verteilzentrum.db"))
 	if err != nil {
 		return err
 	}

@@ -29,7 +29,6 @@ import (
 
 func main() {
 	flag.StringVar(&internal.Config.ConfigPath, "config", "./config.toml", "The config file for verteilzentrum.")
-	flag.StringVar(&internal.Config.DataDir, "datadir", "./", "The location where all persistent data is stored.")
 	flag.Parse()
 
 	if err := internal.ReadConfig(); err != nil {
