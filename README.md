@@ -12,7 +12,7 @@ Verteilzentrum is a minimalistic mailing list following the [KISS](https://en.wi
 - Configurable publishing rights
 
 # Installation
-0. Install golang (>=1.14), gcc, make and build-essential if you don't have them already
+0. Install golang (>=1.15), gcc, make and build-essential if you don't have them already
 1. Clone the repository: `git clone https://github.com/bn4t/verteilzentrum.git`
 2. Checkout the latest stable tag 
 3. Make sure `go` is in your `$PATH` and run `make build` to build the verteilzentrum binary
