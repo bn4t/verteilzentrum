@@ -13,7 +13,7 @@ Verteilzentrum is a minimalistic mailing list following the [KISS](https://en.wi
 
 # Installation
 0. Install golang (>=1.14), gcc, make and build-essential if you don't have them already
-1. Clone the repository: `git clone https://git.bn4t.me/bn4t/verteilzentrum.git`
+1. Clone the repository: `git clone https://github.com/bn4t/verteilzentrum.git`
 2. Checkout the latest stable tag 
 3. Make sure `go` is in your `$PATH` and run `make build` to build the verteilzentrum binary
 4. Run `sudo make install` to install verteilzentrum on your system. This will create the directories `/etc/verteilzentrum` (config directory) and `/var/lib/verteilzentrum` (data directory). Additionally the user `verteilzentrum` will be created.
@@ -76,6 +76,10 @@ Path to the corresponding private key to the TLS certificate.
 
 To disable inbound TLS just comment out both TLS settings.
 
+##### data_dir
+The location where all persistent data is stored.
+ 
+
 #### Example
 ````toml
 [verteilzentrum]
@@ -87,6 +91,7 @@ write_timeout = 100000
 max_message_bytes = 1048576 # 1024 * 1024
 tls_cert_file = "/some/path/cert.pem"
 tls_key_file = "/some/path/key.pem"
+data_dir = "/var/lib/verteilzentrum"
 ````
 
 ## Lists
@@ -128,7 +133,6 @@ For further examples take a look at the [example config](configs/config.example.
 
 ## Command line flags
 - `-config <config file>` - The location of the config file to use. Defaults to `config.toml` in the working directory.
-- `-datadir <data directory>` - The location where all persistent data is stored. Defaults to the working directory.
 
 # Deinstallation
 Run `sudo make uninstall` to uninstall verteilzentrum. 
