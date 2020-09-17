@@ -24,7 +24,7 @@ import (
 )
 
 // start a loop that tries to send out queued mails every 10 minutes
-func StartMsgQueueRunner() {
+func startMsgQueueRunner() {
 	for {
 
 		time.Sleep(20 * time.Minute)

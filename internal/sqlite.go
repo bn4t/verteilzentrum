@@ -46,7 +46,7 @@ func InitDatabase() error {
 	return nil
 }
 
-func GetSubscribers(list string) ([]string, error) {
+func getSubscribers(list string) ([]string, error) {
 	var subscribers []string
 
 	rows, err := DbCon.Query("SELECT email from subscriber where subscriber.list = $1;", list)
@@ -67,7 +67,7 @@ func GetSubscribers(list string) ([]string, error) {
 	return subscribers, nil
 }
 
-func Subscribe(email string, list string) error {
+func subscribe(email string, list string) error {
 
 	_, err := DbCon.Exec("INSERT OR IGNORE INTO subscriber (email, list) VALUES ($1, $2);",
 		email, list)
@@ -77,7 +77,7 @@ func Subscribe(email string, list string) error {
 	return nil
 }
 
-func Unsubscribe(email string, list string) error {
+func unsubscribe(email string, list string) error {
 
 	_, err := DbCon.Exec("DELETE FROM subscriber WHERE email = $1 and list= $2;",
 		email, list)
@@ -87,7 +87,7 @@ func Unsubscribe(email string, list string) error {
 	return nil
 }
 
-func AddToMsgQueue(recv string, list string, data string) error {
+func addToMsgQueue(recv string, list string, data string) error {
 
 	_, err := DbCon.Exec("INSERT INTO msg_queue (receiver, list, data) VALUES ($1, $2, $3);",
 		recv, list, data)
