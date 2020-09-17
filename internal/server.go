@@ -31,7 +31,7 @@ func InitServer() {
 	rand.Seed(time.Now().UTC().UnixNano())
 
 	log.Print("Starting message queue...")
-	go StartMsgQueueRunner()
+	go startMsgQueueRunner()
 
 	// if tls options are set start tls listener
 	if Config.Verteilzentrum.TlsCertFile != "" && Config.Verteilzentrum.TlsKeyFile != "" {
@@ -50,7 +50,6 @@ func InitServer() {
 			log.Fatal(err)
 		}
 	}()
-
 }
 
 func createNewServer() *smtp.Server {
@@ -68,7 +67,7 @@ func createNewServer() *smtp.Server {
 	if Config.Verteilzentrum.TlsCertFile != "" && Config.Verteilzentrum.TlsKeyFile != "" {
 		var err error
 		s.Addr = Config.Verteilzentrum.BindToTls
-		if s.TLSConfig, err = LoadTLSCertificate(); err != nil {
+		if s.TLSConfig, err = loadTLSCertificate(); err != nil {
 			log.Fatal(err)
 		}
 	} else {

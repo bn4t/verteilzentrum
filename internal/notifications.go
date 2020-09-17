@@ -30,15 +30,14 @@ func SendSubscribeNotif(receiver string, list string) error {
 		"Mime-Version: 1.0\r\n" +
 		"Date: " + time.Now().UTC().Format(time.RFC1123Z) + "\r\n" +
 		"Content-Type: text/plain\r\n" +
-		"Message-Id: " + GenerateMessageId(receiver) + "\r\n" +
+		"Message-Id: " + generateMessageId(receiver) + "\r\n" +
 		"\r\n" +
 		"Hi,\r\n\r\nYou are now successfully subscribed to " + list + ".\r\n\r\n" +
 		"You can unsubscribe at any time by sending an email to unsubscribe+" + list + ".\r\n"
 
 	if err := SendMail([]byte(msg), "bounce+"+list, receiver); err != nil {
-		if err = AddToMsgQueue(receiver, "bounce+"+list, msg); err != nil {
-			log.Print("Error while adding message to message queue:")
-			log.Print(err)
+		if err = addToMsgQueue(receiver, "bounce+"+list, msg); err != nil {
+			log.Print("Error while adding message to message queue: " + err.Error())
 		}
 		return err
 	}
@@ -57,9 +56,8 @@ func SendUnsubscribeNotif(receiver string, list string) error {
 		"You can resubscribe at any time by sending an email to subscribe+" + list + ".\r\n"
 
 	if err := SendMail([]byte(msg), "bounce+"+list, receiver); err != nil {
-		if err = AddToMsgQueue(receiver, "bounce+"+list, msg); err != nil {
-			log.Print("Error while adding message to message queue:")
-			log.Print(err)
+		if err = addToMsgQueue(receiver, "bounce+"+list, msg); err != nil {
+			log.Print("Error while adding message to message queue: " + err.Error())
 		}
 		return err
 	}

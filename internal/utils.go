@@ -25,7 +25,7 @@ import (
 	"strconv"
 )
 
-func StringInSlice(a string, list []string) bool {
+func stringInSlice(a string, list []string) bool {
 	for _, b := range list {
 		if b == a {
 			return true
@@ -35,7 +35,7 @@ func StringInSlice(a string, list []string) bool {
 }
 
 // check if a provided mailing list exists
-func ListExists(list string) bool {
+func listExists(list string) bool {
 	for _, b := range Config.Lists {
 		if b.Name == list {
 			return true
@@ -44,7 +44,7 @@ func ListExists(list string) bool {
 	return false
 }
 
-func GenerateMessageId(receiver string) string {
+func generateMessageId(receiver string) string {
 	var randnums string
 	for i := 0; i < 20; i++ {
 		randnums += strconv.Itoa(rand.Int())
