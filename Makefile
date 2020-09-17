@@ -6,13 +6,7 @@ SHELL = /bin/bash
 .ONESHELL:
 .DELETE_ON_ERROR:
 
-# check if recipeprefix is supported
-ifeq ($(origin .RECIPEPREFIX), undefined)
-  $(error This Make does not support .RECIPEPREFIX. Please use GNU Make 4.0 or later)
-endif
-.RECIPEPREFIX = >
-
-.SUFFIXES:      # delete the default suffixe
+.SUFFIXES:      # delete the default suffixes
 .SUFFIXES: .go  # add .go as suffix
 
 PREFIX?=/usr/local
@@ -24,29 +18,29 @@ RM?=rm -f # Exists in GNUMake but not in NetBSD make and others.
 
 
 build:
-> $(GO) build $(GOFLAGS) -o verteilzentrum .
+	$(GO) build $(GOFLAGS) -o verteilzentrum .
 
 run: build
-> ./verteilzentrum
+	./verteilzentrum
 
 install: build
-> useradd -MUr verteilzentrum
-> install -m755 -gverteilzentrum -overteilzentrum verteilzentrum $(BINDIR)/verteilzentrum
-> setcap 'cap_net_bind_service=+ep' $(BINDIR)/verteilzentrum # allow verteilzentrum to bind to priviledged ports as non-root user
-> mkdir -p /etc/verteilzentrum
-> mkdir -p /var/lib/verteilzentrum
-> chown -R verteilzentrum:verteilzentrum /etc/verteilzentrum
-> chown -R verteilzentrum:verteilzentrum /var/lib/verteilzentrum
-> if [ ! -f "/etc/verteilzentrum/config.toml" ]; then
-> 	install -m600 -gverteilzentrum -overteilzentrum configs/config.example.toml /etc/verteilzentrum/config.toml
-> fi
+	useradd -MUr verteilzentrum
+	install -m755 -gverteilzentrum -overteilzentrum verteilzentrum $(BINDIR)/verteilzentrum
+	setcap 'cap_net_bind_service=+ep' $(BINDIR)/verteilzentrum # allow verteilzentrum to bind to priviledged ports as non-root user
+	mkdir -p /etc/verteilzentrum
+	mkdir -p /var/lib/verteilzentrum
+	chown -R verteilzentrum:verteilzentrum /etc/verteilzentrum
+	chown -R verteilzentrum:verteilzentrum /var/lib/verteilzentrum
+	if [ ! -f "/etc/verteilzentrum/config.toml" ]; then
+		install -m600 -gverteilzentrum -overteilzentrum configs/config.example.toml /etc/verteilzentrum/config.toml
+	fi
 
 install-systemd:
-> install -m644 -groot -oroot init/verteilzentrum.service /etc/systemd/system/verteilzentrum.service
-> systemctl daemon-reload
+	install -m644 -groot -oroot init/verteilzentrum.service /etc/systemd/system/verteilzentrum.service
+	systemctl daemon-reload
 
 clean:
-> $(RM) verteilzentrum
+	$(RM) verteilzentrum
 
 
 RMDIR_IF_EMPTY:=sh -c '\
@@ -56,14 +50,14 @@ fi'
 
 
 uninstall:
-> $(RM) $(BINDIR)/verteilzentrum
-> $(RMDIR_IF_EMPTY) /etc/verteilzentrum
-> $(RMDIR_IF_EMPTY) /var/lib/verteilzentrum
+	$(RM) $(BINDIR)/verteilzentrum
+	$(RMDIR_IF_EMPTY) /etc/verteilzentrum
+	$(RMDIR_IF_EMPTY) /var/lib/verteilzentrum
 
 uninstall-systemd:
-> systemctl stop verteilzentrum
-> $(RM) /etc/systemd/system/verteilzentrum.service
-> systemctl daemon-reload
+	systemctl stop verteilzentrum
+	$(RM) /etc/systemd/system/verteilzentrum.service
+	systemctl daemon-reload
 
 .DEFAULT_GOAL = build
 .PHONY: all build install uninstall clean install-systemd uninstall-systemd
