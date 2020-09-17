@@ -39,6 +39,10 @@ type verteilzentrumConfig struct {
 	TlsCertFile     string `toml:"tls_cert_file"`
 	TlsKeyFile      string `toml:"tls_key_file"`
 	DataDir         string `toml:"data_dir"`
+	MtaAddress      string `toml:"mta_address"`
+	MtaAuthMethod   string `toml:"mta_auth_method"`
+	MtaUsername     string `toml:"mta_username"`
+	MtaPassword     string `toml:"mta_password"`
 }
 
 type configuration struct {
@@ -47,9 +51,26 @@ type configuration struct {
 	ConfigPath     string
 }
 
-var Config *configuration
+var Config = &configuration{}
 
+// ReadConfig reads in the config and does some basic config validation
 func ReadConfig() error {
-	_, err := toml.DecodeFile(Config.ConfigPath, Config)
-	return err
+	if _, err := toml.DecodeFile(Config.ConfigPath, Config); err != nil {
+		return err
+	}
+
+	// some basic config validation
+	if Config.Verteilzentrum.MtaAuthMethod != "PLAIN" && Config.Verteilzentrum.MtaAuthMethod != "ANONYMOUS" {
+		return errors.New("invalid mta_auth_method specified. Valid auth methods are 'PLAIN' and 'ANONYMOUS'")
+	}
+
+	fi, err := os.Stat(Config.Verteilzentrum.DataDir)
+	if err != nil {
+		return errors.New("specified data_dir could not be found: " + err.Error())
+	}
+
+	if !fi.IsDir() {
+		return errors.New("specified data_dir is not a directory")
+	}
+	return nil
 }
