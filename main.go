@@ -50,8 +50,8 @@ func main() {
 		syscall.SIGQUIT)
 
 	<-sigc
-	log.Print("Stopping server gracefully...")
-	for _, val := range internal.Servers {
-		val.Close()
+	log.Print("Stopping verteilzentrum gracefully...")
+	for _, v := range internal.Servers {
+		v.Close()
 	}
 }
