@@ -10,6 +10,7 @@ Verteilzentrum is a minimalistic mailing list following the [KISS](https://en.wi
 - Blacklisting
 - Whitelisting
 - Configurable publishing rights
+- Sending through an external MTA
 
 # Installation
 0. Install golang (>=1.14), gcc, make and build-essential if you don't have them already
@@ -25,7 +26,7 @@ setfacl -m u:verteilzentrum:rx /etc/letsencrypt/
 ````
 
 #### Increasing deliverability
-To increase deliverability it is recommended to set up an [SPF](https://en.wikipedia.org/wiki/Sender_Policy_Framework) and [DMARC](https://en.wikipedia.org/wiki/DMARC) record. 
+To increase deliverability it is recommended to set up an [SPF](https://en.wikipedia.org/wiki/Sender_Policy_Framework) and [DMARC](https://en.wikipedia.org/wiki/DMARC) record for the MTA. 
 
 
 # How to use
@@ -82,7 +83,7 @@ The location where all persistent data is stored.
 #### mta_address
 The address of the mta used to send mailing list messages.
 
-This mta is used to send messages for all configured mailing lists.
+This mta is used to send messages for all configured mailing lists including subscription notifications.
 
 #### mta_auth_method
 The auth method used for authentication to the mta.
