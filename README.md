@@ -10,6 +10,7 @@ Verteilzentrum is a minimalistic mailing list following the [KISS](https://en.wi
 - Blacklisting
 - Whitelisting
 - Configurable publishing rights
+- Sending through an external MTA
 
 # Installation
 0. Install golang (>=1.15), gcc, make and build-essential if you don't have them already
@@ -25,7 +26,7 @@ setfacl -m u:verteilzentrum:rx /etc/letsencrypt/
 ````
 
 #### Increasing deliverability
-To increase deliverability it is recommended to set up an [SPF](https://en.wikipedia.org/wiki/Sender_Policy_Framework) and [DMARC](https://en.wikipedia.org/wiki/DMARC) record. 
+To increase deliverability it is recommended to set up an [SPF](https://en.wikipedia.org/wiki/Sender_Policy_Framework) and [DMARC](https://en.wikipedia.org/wiki/DMARC) record for the MTA. 
 
 
 # How to use
@@ -79,6 +80,22 @@ To disable inbound TLS just comment out both TLS settings.
 ##### data_dir
 The location where all persistent data is stored.
  
+#### mta_address
+The address of the mta used to send mailing list messages.
+
+This mta is used to send messages for all configured mailing lists including subscription notifications.
+
+#### mta_auth_method
+The auth method used for authentication to the mta.
+
+Can be either `PLAIN` or `ANONYMOUS`.
+
+#### mta_username
+The username used for authentication to the mta.
+
+#### mta_password
+The password used for authentication to the mta.
+
 
 #### Example
 ````toml
@@ -92,10 +109,14 @@ max_message_bytes = 1048576 # 1024 * 1024
 tls_cert_file = "/some/path/cert.pem"
 tls_key_file = "/some/path/key.pem"
 data_dir = "/var/lib/verteilzentrum"
+mta_address = "smtp.example.com"
+mta_auth_method = "PLAIN"
+mta_username = "lists@example.com"
+mta_password = "secret"
 ````
 
 ## Lists
-Lists are represented toml tables in an array.
+Lists are represented as toml tables in an array.
 
 #### Table elements
 ##### name 
