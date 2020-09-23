@@ -22,6 +22,7 @@ import (
 	"errors"
 	"github.com/BurntSushi/toml"
 	"os"
+	"strings"
 )
 
 type list struct {
@@ -74,5 +75,11 @@ func ReadConfig() error {
 	if !fi.IsDir() {
 		return errors.New("specified data_dir is not a directory")
 	}
+
+	// append a trailing slash to the data dir if it doesn't have one
+	if !strings.HasSuffix(Config.Verteilzentrum.DataDir, "/") {
+		Config.Verteilzentrum.DataDir += "/"
+	}
+
 	return nil
 }
