@@ -23,7 +23,6 @@ import (
 	"github.com/BurntSushi/toml"
 	"os"
 	"strings"
-	"verteilzentrum/internal/logging"
 )
 
 type list struct {
@@ -83,9 +82,10 @@ func ReadConfig() error {
 		Config.Verteilzentrum.DataDir += "/"
 	}
 
-	if Config.Verteilzentrum.Logging != logging.LogLvlDebug &&
-		Config.Verteilzentrum.Logging != logging.LogLvlInfo &&
-		Config.Verteilzentrum.Logging != logging.LogLvlErr {
+	// the constants defined in the logging package can't be used here because it would lead to an import cycle
+	if Config.Verteilzentrum.Logging != "DEBUG" &&
+		Config.Verteilzentrum.Logging != "INFO" &&
+		Config.Verteilzentrum.Logging != "ERROR" {
 		return errors.New("invalid logging level specified. Valid logging levels are: DEBUG, INFO and ERROR")
 	}
 	return nil
