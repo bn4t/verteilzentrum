@@ -1,5 +1,5 @@
 [verteilzentrum]
-logging = "DEBUG"
+logging = "INFO"
 bind_to = "0.0.0.0:25"
 bind_to_tls = "0.0.0.0:465"
 hostname = "lists.example.com"
