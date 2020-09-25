@@ -24,6 +24,7 @@ import (
 	"math/rand"
 	"time"
 	"verteilzentrum/internal/config"
+	"verteilzentrum/internal/logging"
 )
 
 var Servers []*smtp.Server
@@ -31,13 +32,13 @@ var Servers []*smtp.Server
 func InitServer() {
 	rand.Seed(time.Now().UTC().UnixNano())
 
-	log.Print("Starting message queue...")
+	logging.LogMsg("starting message queue...", logging.LogLvlInfo)
 	go startMsgQueueRunner()
 
 	// if tls options are set start tls listener
 	if config.Config.Verteilzentrum.TlsCertFile != "" && config.Config.Verteilzentrum.TlsKeyFile != "" {
 		go func() {
-			log.Print("Starting TLS listener...")
+			logging.LogMsg("starting tls listener at "+config.Config.Verteilzentrum.BindToTls, logging.LogLvlInfo)
 			s := createNewServer()
 			if err := s.ListenAndServeTLS(); err != nil {
 				log.Fatal(err)
@@ -45,7 +46,7 @@ func InitServer() {
 		}()
 	}
 	go func() {
-		log.Print("Starting plaintext listener...")
+		logging.LogMsg("starting plaintext listener at "+config.Config.Verteilzentrum.BindTo, logging.LogLvlInfo)
 		s := createNewServer()
 		if err := s.ListenAndServe(); err != nil {
 			log.Fatal(err)
