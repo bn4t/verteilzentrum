@@ -1,6 +1,6 @@
 [Unit]
 Description=A minimalistic mailing list
-Documentation=https://git.bn4t.me/bn4t/verteilzentrum/src/branch/master/README.md
+Documentation=https://github.com/bn4t/verteilzentrum/blob/master/README.md
 After=network.target
 StartLimitBurst=5
 StartLimitIntervalSec=10
