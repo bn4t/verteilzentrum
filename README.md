@@ -52,7 +52,7 @@ The logging level for verteilzentrum.
 Can be one of the following:
 
 - `DEBUG` => Everything is logged
-- `INFO` => Everything except debug messages is logged
+- `INFO` => Everything is logged except debug messages
 - `ERROR` => Only errors are logged
 
 ##### bind_to
