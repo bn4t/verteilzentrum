@@ -43,7 +43,7 @@ func main() {
 
 	internal.InitServer()
 
-	logging.LogMsg("Verteilzentrum successfully started", logging.LogLvlInfo)
+	logging.LogMsg("verteilzentrum successfully started", logging.LogLvlInfo)
 
 	sigc := make(chan os.Signal, 1)
 	signal.Notify(sigc,
