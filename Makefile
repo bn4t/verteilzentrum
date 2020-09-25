@@ -24,7 +24,7 @@ run: build
 	./verteilzentrum
 
 install: build
-	useradd -MUr verteilzentrum
+	id "verteilzentrum" &>/dev/null || useradd -MUr verteilzentrum
 	install -m755 -gverteilzentrum -overteilzentrum verteilzentrum $(BINDIR)/verteilzentrum
 	setcap 'cap_net_bind_service=+ep' $(BINDIR)/verteilzentrum # allow verteilzentrum to bind to priviledged ports as non-root user
 	mkdir -p /etc/verteilzentrum
