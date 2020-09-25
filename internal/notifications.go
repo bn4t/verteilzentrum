@@ -19,8 +19,8 @@
 package internal
 
 import (
-	"log"
 	"time"
+	"verteilzentrum/internal/logging"
 )
 
 func SendSubscribeNotif(receiver string, list string) error {
@@ -37,7 +37,7 @@ func SendSubscribeNotif(receiver string, list string) error {
 
 	if err := SendMail([]byte(msg), "bounce+"+list, receiver); err != nil {
 		if err = addToMsgQueue(receiver, "bounce+"+list, msg); err != nil {
-			log.Print("Error while adding message to message queue: " + err.Error())
+			logging.LogMsg("error while adding message to message queue: "+err.Error(), logging.LogLvlErr)
 		}
 		return err
 	}
@@ -57,7 +57,7 @@ func SendUnsubscribeNotif(receiver string, list string) error {
 
 	if err := SendMail([]byte(msg), "bounce+"+list, receiver); err != nil {
 		if err = addToMsgQueue(receiver, "bounce+"+list, msg); err != nil {
-			log.Print("Error while adding message to message queue: " + err.Error())
+			logging.LogMsg("error while adding message to message queue: "+err.Error(), logging.LogLvlErr)
 		}
 		return err
 	}

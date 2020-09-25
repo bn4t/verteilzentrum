@@ -20,11 +20,12 @@ package internal
 
 import (
 	"crypto/tls"
+	"verteilzentrum/internal/config"
 )
 
 // load the specified tls certificate and key and return the corresponding tls config
 func loadTLSCertificate() (*tls.Config, error) {
-	cert, err := tls.LoadX509KeyPair(Config.Verteilzentrum.TlsCertFile, Config.Verteilzentrum.TlsKeyFile)
+	cert, err := tls.LoadX509KeyPair(config.Config.Verteilzentrum.TlsCertFile, config.Config.Verteilzentrum.TlsKeyFile)
 	if err != nil {
 		return &tls.Config{}, err
 	}

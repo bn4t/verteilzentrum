@@ -16,13 +16,14 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package internal
+package config
 
 import (
 	"errors"
 	"github.com/BurntSushi/toml"
 	"os"
 	"strings"
+	"verteilzentrum/internal/logging"
 )
 
 type list struct {
@@ -33,6 +34,7 @@ type list struct {
 }
 
 type verteilzentrumConfig struct {
+	Logging         string `toml:"logging"`
 	BindTo          string `toml:"bind_to"`
 	BindToTls       string `toml:"bind_to_tls"`
 	Hostname        string `toml:"hostname"`
@@ -81,5 +83,10 @@ func ReadConfig() error {
 		Config.Verteilzentrum.DataDir += "/"
 	}
 
+	if Config.Verteilzentrum.Logging != logging.LogLvlDebug &&
+		Config.Verteilzentrum.Logging != logging.LogLvlInfo &&
+		Config.Verteilzentrum.Logging != logging.LogLvlErr {
+		return errors.New("invalid logging level specified. Valid logging levels are: DEBUG, INFO and ERROR")
+	}
 	return nil
 }

@@ -23,6 +23,7 @@ import (
 	"encoding/hex"
 	"math/rand"
 	"strconv"
+	"verteilzentrum/internal/config"
 )
 
 func stringInSlice(a string, list []string) bool {
@@ -36,7 +37,7 @@ func stringInSlice(a string, list []string) bool {
 
 // check if a provided mailing list exists
 func listExists(list string) bool {
-	for _, b := range Config.Lists {
+	for _, b := range config.Config.Lists {
 		if b.Name == list {
 			return true
 		}
@@ -51,5 +52,5 @@ func generateMessageId(receiver string) string {
 	}
 
 	hash := sha256.Sum256([]byte(receiver + randnums))
-	return "<" + hex.EncodeToString(hash[:32]) + "@" + Config.Verteilzentrum.Hostname + ">"
+	return "<" + hex.EncodeToString(hash[:32]) + "@" + config.Config.Verteilzentrum.Hostname + ">"
 }
