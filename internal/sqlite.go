@@ -22,16 +22,19 @@ import (
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
 	"path"
+	"verteilzentrum/internal/config"
+	"verteilzentrum/internal/logging"
 )
 
 var DbCon *sql.DB
 
 func InitDatabase() error {
 	var err error
-	DbCon, err = sql.Open("sqlite3", path.Join(Config.Verteilzentrum.DataDir+"verteilzentrum.db"))
+	DbCon, err = sql.Open("sqlite3", path.Join(config.Config.Verteilzentrum.DataDir+"verteilzentrum.db"))
 	if err != nil {
 		return err
 	}
+	logging.LogMsg("successfully opened the database at "+path.Join(config.Config.Verteilzentrum.DataDir+"verteilzentrum.db"), logging.LogLvlDebug)
 
 	_, err = DbCon.Exec("CREATE TABLE if not exists subscriber (id integer not null primary key autoincrement, email text not null, list text, unique(email, list));")
 	if err != nil {

@@ -23,6 +23,7 @@ import (
 	"log"
 	"math/rand"
 	"time"
+	"verteilzentrum/internal/config"
 )
 
 var Servers []*smtp.Server
@@ -34,7 +35,7 @@ func InitServer() {
 	go startMsgQueueRunner()
 
 	// if tls options are set start tls listener
-	if Config.Verteilzentrum.TlsCertFile != "" && Config.Verteilzentrum.TlsKeyFile != "" {
+	if config.Config.Verteilzentrum.TlsCertFile != "" && config.Config.Verteilzentrum.TlsKeyFile != "" {
 		go func() {
 			log.Print("Starting TLS listener...")
 			s := createNewServer()
@@ -57,21 +58,21 @@ func createNewServer() *smtp.Server {
 
 	s := smtp.NewServer(be)
 
-	s.Domain = Config.Verteilzentrum.Hostname
-	s.WriteTimeout = time.Duration(Config.Verteilzentrum.WriteTimeout) * time.Millisecond
-	s.ReadTimeout = time.Duration(Config.Verteilzentrum.ReadTimeout) * time.Millisecond
-	s.MaxMessageBytes = Config.Verteilzentrum.MaxMessageBytes
+	s.Domain = config.Config.Verteilzentrum.Hostname
+	s.WriteTimeout = time.Duration(config.Config.Verteilzentrum.WriteTimeout) * time.Millisecond
+	s.ReadTimeout = time.Duration(config.Config.Verteilzentrum.ReadTimeout) * time.Millisecond
+	s.MaxMessageBytes = config.Config.Verteilzentrum.MaxMessageBytes
 	s.AuthDisabled = true
 
 	// add the tls config also to the non-tls listener to support STARTTLS
-	if Config.Verteilzentrum.TlsCertFile != "" && Config.Verteilzentrum.TlsKeyFile != "" {
+	if config.Config.Verteilzentrum.TlsCertFile != "" && config.Config.Verteilzentrum.TlsKeyFile != "" {
 		var err error
-		s.Addr = Config.Verteilzentrum.BindToTls
+		s.Addr = config.Config.Verteilzentrum.BindToTls
 		if s.TLSConfig, err = loadTLSCertificate(); err != nil {
 			log.Fatal(err)
 		}
 	} else {
-		s.Addr = Config.Verteilzentrum.BindTo
+		s.Addr = config.Config.Verteilzentrum.BindTo
 	}
 
 	Servers = append(Servers, s)

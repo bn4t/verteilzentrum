@@ -22,20 +22,21 @@ import (
 	"bytes"
 	"github.com/emersion/go-sasl"
 	"github.com/emersion/go-smtp"
+	"verteilzentrum/internal/config"
 )
 
 // SendMail sends the specified message to the given sender using the mta credentials from the config
 func SendMail(data []byte, from string, to string) error {
 	var auth sasl.Client
 
-	switch Config.Verteilzentrum.MtaAuthMethod {
+	switch config.Config.Verteilzentrum.MtaAuthMethod {
 	case "PLAIN":
-		auth = sasl.NewPlainClient("", Config.Verteilzentrum.MtaUsername, Config.Verteilzentrum.MtaPassword)
+		auth = sasl.NewPlainClient("", config.Config.Verteilzentrum.MtaUsername, config.Config.Verteilzentrum.MtaPassword)
 		break
 	case "ANONYMOUS":
 		auth = sasl.NewAnonymousClient("verteilzentrum")
 		break
 	}
 
-	return smtp.SendMail(Config.Verteilzentrum.MtaAddress, auth, from, []string{to}, bytes.NewReader(data))
+	return smtp.SendMail(config.Config.Verteilzentrum.MtaAddress, auth, from, []string{to}, bytes.NewReader(data))
 }

@@ -25,13 +25,15 @@ import (
 	"os/signal"
 	"syscall"
 	"verteilzentrum/internal"
+	"verteilzentrum/internal/config"
+	"verteilzentrum/internal/logging"
 )
 
 func main() {
-	flag.StringVar(&internal.Config.ConfigPath, "config", "./config.toml", "The config file for verteilzentrum.")
+	flag.StringVar(&config.Config.ConfigPath, "config", "./config.toml", "The config file for verteilzentrum.")
 	flag.Parse()
 
-	if err := internal.ReadConfig(); err != nil {
+	if err := config.ReadConfig(); err != nil {
 		log.Fatal(err)
 	}
 
@@ -41,6 +43,8 @@ func main() {
 
 	internal.InitServer()
 
+	logging.LogMsg("Verteilzentrum successfully started", logging.LogLvlInfo)
+
 	sigc := make(chan os.Signal, 1)
 	signal.Notify(sigc,
 		os.Interrupt,
@@ -49,8 +53,9 @@ func main() {
 		syscall.SIGQUIT)
 
 	<-sigc
-	log.Print("Stopping verteilzentrum gracefully...")
+	logging.LogMsg("Stopping verteilzentrum gracefully...", logging.LogLvlInfo)
 	for _, v := range internal.Servers {
 		v.Close()
 	}
+	logging.LogMsg("Goodbye...", logging.LogLvlInfo)
 }

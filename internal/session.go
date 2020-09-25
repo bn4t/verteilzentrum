@@ -22,9 +22,10 @@ import (
 	"github.com/emersion/go-smtp"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/mail"
 	"strings"
+	"verteilzentrum/internal/config"
+	"verteilzentrum/internal/logging"
 )
 
 // A Session is returned after successful login.
@@ -68,7 +69,7 @@ func (s *Session) Rcpt(to string) error {
 		}
 	}
 
-	for _, list := range Config.Lists {
+	for _, list := range config.Config.Lists {
 		if list.Name != s.List {
 			continue
 		}
@@ -95,7 +96,7 @@ func (s *Session) Rcpt(to string) error {
 		if s.Prefix == "subscribe" {
 			err := subscribe(s.From, s.List)
 			if err != nil {
-				log.Print("Error while trying to subscribe user " + s.From + " to list " + s.List + ": " + err.Error())
+				logging.LogMsg("error while trying to subscribe user "+s.From+" to list "+s.List+": "+err.Error(), logging.LogLvlErr)
 				return &smtp.SMTPError{
 					Code:         451,
 					EnhancedCode: smtp.EnhancedCode{451},
@@ -105,7 +106,7 @@ func (s *Session) Rcpt(to string) error {
 
 			err = SendSubscribeNotif(s.From, s.List)
 			if err != nil {
-				log.Print("Error while sending subscribe confirmation to user " + s.From + " for list " + s.List + ": " + err.Error())
+				logging.LogMsg("error while sending subscribe confirmation to user "+s.From+" for list "+s.List+": "+err.Error(), logging.LogLvlErr)
 				return &smtp.SMTPError{
 					Code:         451,
 					EnhancedCode: smtp.EnhancedCode{451},
@@ -119,7 +120,7 @@ func (s *Session) Rcpt(to string) error {
 		if s.Prefix == "unsubscribe" {
 			err := unsubscribe(s.From, s.List)
 			if err != nil {
-				log.Print("Error while trying to unsubscribe user " + s.From + " from list " + s.List + ": " + err.Error())
+				logging.LogMsg("error while trying to unsubscribe user "+s.From+" from list "+s.List+": "+err.Error(), logging.LogLvlErr)
 				return &smtp.SMTPError{
 					Code:         451,
 					EnhancedCode: smtp.EnhancedCode{451},
@@ -129,7 +130,7 @@ func (s *Session) Rcpt(to string) error {
 
 			err = SendUnsubscribeNotif(s.From, s.List)
 			if err != nil {
-				log.Print("Error while sending unsubscribe confirmation to user " + s.From + " for list " + s.List + ": " + err.Error())
+				logging.LogMsg("error while sending unsubscribe confirmation to user "+s.From+" for list "+s.List+": "+err.Error(), logging.LogLvlErr)
 				return &smtp.SMTPError{
 					Code:         451,
 					EnhancedCode: smtp.EnhancedCode{451},
@@ -149,7 +150,7 @@ func (s *Session) Data(r io.Reader) error {
 		return nil
 	}
 
-	for _, list := range Config.Lists {
+	for _, list := range config.Config.Lists {
 		if list.Name != s.List {
 			continue
 		}
@@ -182,6 +183,8 @@ func (s *Session) Data(r io.Reader) error {
 		}
 	}
 
+	logging.LogMsg("received message from "+s.From+" for mailing list "+s.List, logging.LogLvlDebug)
+
 	// set mailing list headers
 	m.Header["List-Unsubscribe"] = []string{"<mailto:unsubscribe+" + s.List + ">"}
 	m.Header["List-Post"] = []string{"<mailto:" + s.List + ">"}
@@ -213,8 +216,7 @@ func (s *Session) Data(r io.Reader) error {
 		// try to send the mail to the subscriber. If this fails queue the message for resending.
 		if err := SendMail([]byte(strData), "bounce+"+s.List, v); err != nil {
 			if err := addToMsgQueue(v, "bounce+"+s.List, strData); err != nil {
-				log.Print("Error adding message to message queue:")
-				log.Print(err)
+				logging.LogMsg("error adding message to message queue: "+err.Error(), logging.LogLvlErr)
 			}
 		}
 	}
