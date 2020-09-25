@@ -10,7 +10,7 @@ const LogLvlInfo = "INFO"
 const LogLvlDebug = "DEBUG"
 
 func LogMsg(msg string, lvl string) {
-	if lvl == LogLvlDebug {
+	if config.Config.Verteilzentrum.Logging == LogLvlDebug {
 		logMsg(msg, lvl)
 		return
 	}
