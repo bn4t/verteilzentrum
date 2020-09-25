@@ -53,9 +53,9 @@ func main() {
 		syscall.SIGQUIT)
 
 	<-sigc
-	logging.LogMsg("Stopping verteilzentrum gracefully...", logging.LogLvlInfo)
+	logging.LogMsg("stopping verteilzentrum gracefully...", logging.LogLvlInfo)
 	for _, v := range internal.Servers {
 		v.Close()
 	}
-	logging.LogMsg("Goodbye...", logging.LogLvlInfo)
+	logging.LogMsg("goodbye...", logging.LogLvlInfo)
 }

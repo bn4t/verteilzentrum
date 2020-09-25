@@ -32,8 +32,8 @@ var Servers []*smtp.Server
 func InitServer() {
 	rand.Seed(time.Now().UTC().UnixNano())
 
-	logging.LogMsg("starting message queue...", logging.LogLvlInfo)
 	go startMsgQueueRunner()
+	logging.LogMsg("started message queue", logging.LogLvlInfo)
 
 	// if tls options are set start tls listener
 	if config.Config.Verteilzentrum.TlsCertFile != "" && config.Config.Verteilzentrum.TlsKeyFile != "" {
