@@ -47,6 +47,14 @@ By default the config is located at `/etc/verteilzentrum/config.toml`.
 
 ## General options
 
+##### logging
+The logging level for verteilzentrum.
+Can be one of the following:
+
+- `DEBUG` => Everything is logged
+- `INFO` => Everything except debug messages is logged
+- `ERROR` => Only errors are logged
+
 ##### bind_to
 The address including port on which the server should listen for non tls connections.
 Listens by default on `0.0.0.0:25`.
@@ -100,6 +108,7 @@ The password used for authentication to the mta.
 #### Example
 ````toml
 [verteilzentrum]
+logging = "INFO"
 bind_to = "0.0.0.0:25"
 bind_to_tls = "0.0.0.0:465"
 hostname = "lists.example.com"
