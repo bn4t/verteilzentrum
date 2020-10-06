@@ -21,9 +21,11 @@ package main
 import (
 	"flag"
 	"log"
+	"math/rand"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 	"verteilzentrum/internal"
 	"verteilzentrum/internal/config"
 	"verteilzentrum/internal/logging"
@@ -33,6 +35,8 @@ func main() {
 	flag.StringVar(&config.Config.ConfigPath, "config", "./config.toml", "The config file for verteilzentrum.")
 	flag.Parse()
 
+	rand.Seed(time.Now().UTC().UnixNano())
+
 	if err := config.ReadConfig(); err != nil {
 		log.Fatal(err)
 	}
@@ -41,7 +45,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	internal.InitServer()
+	internal.InitListeners()
+	go internal.StartMsgQueue()
 
 	logging.LogMsg("verteilzentrum successfully started", logging.LogLvlInfo)
 
@@ -54,7 +59,7 @@ func main() {
 
 	<-sigc
 	logging.LogMsg("stopping verteilzentrum gracefully...", logging.LogLvlInfo)
-	for _, v := range internal.Servers {
+	for _, v := range internal.Listeners {
 		v.Close()
 	}
 	logging.LogMsg("goodbye...", logging.LogLvlInfo)

@@ -23,8 +23,10 @@ import (
 	"verteilzentrum/internal/logging"
 )
 
-// start a loop that tries to send out queued mails every 10 minutes
-func startMsgQueueRunner() {
+// StartMsgQueue starts a loop that tries to send out queued mails every 10 minutes
+func StartMsgQueue() {
+	logging.LogMsg("starting message queue", logging.LogLvlInfo)
+
 	for {
 		time.Sleep(20 * time.Minute)
 

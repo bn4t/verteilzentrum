@@ -21,25 +21,19 @@ package internal
 import (
 	"github.com/emersion/go-smtp"
 	"log"
-	"math/rand"
 	"time"
 	"verteilzentrum/internal/config"
 	"verteilzentrum/internal/logging"
 )
 
-var Servers []*smtp.Server
+var Listeners []*smtp.Server
 
-func InitServer() {
-	rand.Seed(time.Now().UTC().UnixNano())
-
-	go startMsgQueueRunner()
-	logging.LogMsg("started message queue", logging.LogLvlInfo)
-
+func InitListeners() {
 	// if tls options are set start tls listener
 	if config.Config.Verteilzentrum.TlsCertFile != "" && config.Config.Verteilzentrum.TlsKeyFile != "" {
 		go func() {
 			logging.LogMsg("starting tls listener at "+config.Config.Verteilzentrum.BindToTls, logging.LogLvlInfo)
-			s := createNewServer()
+			s := NewListener()
 			if err := s.ListenAndServeTLS(); err != nil {
 				log.Fatal(err)
 			}
@@ -47,14 +41,14 @@ func InitServer() {
 	}
 	go func() {
 		logging.LogMsg("starting plaintext listener at "+config.Config.Verteilzentrum.BindTo, logging.LogLvlInfo)
-		s := createNewServer()
+		s := NewListener()
 		if err := s.ListenAndServe(); err != nil {
 			log.Fatal(err)
 		}
 	}()
 }
 
-func createNewServer() *smtp.Server {
+func NewListener() *smtp.Server {
 	be := new(Backend)
 
 	s := smtp.NewServer(be)
@@ -76,6 +70,6 @@ func createNewServer() *smtp.Server {
 		s.Addr = config.Config.Verteilzentrum.BindTo
 	}
 
-	Servers = append(Servers, s)
+	Listeners = append(Listeners, s)
 	return s
 }
