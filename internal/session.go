@@ -150,6 +150,7 @@ func (s *Session) Data(r io.Reader) error {
 		return nil
 	}
 
+	var persistentReceivers []string
 	for _, list := range config.Config.Lists {
 		if list.Name != s.List {
 			continue
@@ -163,6 +164,9 @@ func (s *Session) Data(r io.Reader) error {
 				Message:      "You are not allowed to publish on this list",
 			}
 		}
+
+		// get persistent receivers from the config
+		persistentReceivers = list.PersistentReceivers
 	}
 
 	subs, err := getSubscribers(s.List)
@@ -207,6 +211,7 @@ func (s *Session) Data(r io.Reader) error {
 	}
 	strData += "\r\n" + string(d)
 
+	// send out the received message to the subscribers
 	for _, v := range subs {
 		// don't send the mail to sender itself if he is subscribed to the list
 		if s.From == v {
@@ -214,6 +219,16 @@ func (s *Session) Data(r io.Reader) error {
 		}
 
 		// try to send the mail to the subscriber. If this fails queue the message for resending.
+		if err := SendMail([]byte(strData), "bounce+"+s.List, v); err != nil {
+			if err := addToMsgQueue(v, "bounce+"+s.List, strData); err != nil {
+				logging.LogMsg("error adding message to message queue: "+err.Error(), logging.LogLvlErr)
+			}
+		}
+	}
+
+	// send out the received message to the persistent receivers
+	for _, v := range persistentReceivers {
+		// try to send the mail to the persistent receiver. If this fails queue the message for resending.
 		if err := SendMail([]byte(strData), "bounce+"+s.List, v); err != nil {
 			if err := addToMsgQueue(v, "bounce+"+s.List, strData); err != nil {
 				logging.LogMsg("error adding message to message queue: "+err.Error(), logging.LogLvlErr)

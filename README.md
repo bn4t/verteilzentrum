@@ -9,6 +9,7 @@ Verteilzentrum is a minimalistic mailing list following the [KISS](https://en.wi
 - Multiple lists
 - Blacklisting
 - Whitelisting
+- Persistent Receivers
 - Configurable publishing rights
 - Sending through an external MTA
 
@@ -22,7 +23,7 @@ Verteilzentrum is a minimalistic mailing list following the [KISS](https://en.wi
 
 You can make certificates and private key files accessible to the `verteilzentrum` user with the following command:
 ````shell script
-setfacl -m u:verteilzentrum:rx /etc/letsencrypt/ 
+setfacl -m u:verteilzentrum:rx <directory_with_certs>
 ````
 
 #### Increasing deliverability
@@ -130,6 +131,10 @@ Lists are represented as toml tables in an array.
 #### Table elements
 ##### name 
 The name of the list which also serves as the list address.
+
+##### persistent_receivers
+Array of email addresses which always receive mailing list messages regardless of whether they are subscribed.
+
 ##### whitelist
 Array of whitelisted email addresses which are allowed to interact with the list. Supports wildcards.
 
@@ -146,16 +151,18 @@ Array of email addresses which are allowed to publish messages to the list. Supp
 #### Example
 ````toml
 [[list]]
-name = "news@lists.example.com"
-whitelist = ["*"]
-blacklist = ["baduser@gmail.com"]
-can_publish = ["admin@example.com"]
+name = "private-list@lists.example.com"
+persistent_receivers = []
+whitelist = ["hostmaster@example.com","john@example.com"]
+blacklist = []
+can_publish = ["hostmaster@example.com"]
 
 [[list]]
-name = "private-list@lists.example.com"
-whitelist = ["postmaster@example.com","admin@example.com"]
-blacklist = []
-can_publish = ["admin@example.com", "postmaster@example.com"]
+name = "public-list@lists.example.com"
+persistent_receivers = ["archive@example.com"]
+whitelist = []
+blacklist = ["spam@example.com"]
+can_publish = ["moderator@example.com", "admin@example.com"]
 ````
 
 

@@ -18,12 +18,14 @@ mta_password = "secret"
 
 [[list]]
 name = "private-list@lists.example.com"
+persistent_receivers = []
 whitelist = ["hostmaster@example.com","john@example.com"]
 blacklist = []
 can_publish = ["hostmaster@example.com"]
 
 [[list]]
 name = "public-list@lists.example.com"
+persistent_receivers = ["archive@example.com"]
 whitelist = []
 blacklist = ["spam@example.com"]
 can_publish = ["moderator@example.com", "admin@example.com"]

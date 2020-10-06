@@ -26,10 +26,11 @@ import (
 )
 
 type list struct {
-	Name       string   `toml:"name"`
-	Whitelist  []string `toml:"whitelist"`
-	Blacklist  []string `toml:"blacklist"`
-	CanPublish []string `toml:"can_publish"`
+	Name                string   `toml:"name"`
+	PersistentReceivers []string `toml:"persistent_receivers"`
+	Whitelist           []string `toml:"whitelist"`
+	Blacklist           []string `toml:"blacklist"`
+	CanPublish          []string `toml:"can_publish"`
 }
 
 type verteilzentrumConfig struct {
