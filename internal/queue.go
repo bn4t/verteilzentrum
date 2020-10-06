@@ -50,7 +50,7 @@ func StartMsgQueue() {
 			// if the message failed to deliver for more than 10 times delete it from the queue
 			if failedRetries > 10 {
 				if _, err := DbCon.Exec("DELETE FROM msg_queue where receiver = $1 and list = $2 and data = $3", recv, list, data); err != nil {
-					logging.LogMsg("error deleting message from message queue: "+err.Error(), logging.LogLvlErr)
+					logging.LogMsg("error deleting message from message queue (failed delivery attempts > 10): "+err.Error(), logging.LogLvlErr)
 				}
 				continue
 			}
