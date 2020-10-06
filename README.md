@@ -48,7 +48,7 @@ By default the config is located at `/etc/verteilzentrum/config.toml`.
 
 ## General options
 
-##### logging
+#### logging
 The logging level for verteilzentrum.
 Can be one of the following:
 
@@ -56,37 +56,37 @@ Can be one of the following:
 - `INFO` => Everything is logged except debug messages
 - `ERROR` => Only errors are logged
 
-##### bind_to
+#### bind_to
 The address including port on which the server should listen for non tls connections.
 Listens by default on `0.0.0.0:25`.
 
-##### bind_to_tls
+#### bind_to_tls
 The address including port on which the server should listen for tls connections.
 Can be left empty if no tls certificates are configured.
 
 Listens by default on `0.0.0.0:465`.
 
-##### hostname
+#### hostname
 The hostname of the list server. If you specify a TLS certificate it has to be valid for this hostname.
 
-##### read_timeout
+#### read_timeout
 SMTP read timeout in milliseconds.
 
-##### write_timeout
+#### write_timeout
 SMTP write timeout in milliseconds.
 
-##### max_message_bytes
+#### max_message_bytes
 Maximum incoming message size in bytes.
 
-##### tls_cert_file
+#### tls_cert_file
 Path to the TLS certificate file.
 
-##### tls_key_file
+#### tls_key_file
 Path to the corresponding private key to the TLS certificate. 
 
 To disable inbound TLS just comment out both TLS settings.
 
-##### data_dir
+#### data_dir
 The location where all persistent data is stored.
  
 #### mta_address
