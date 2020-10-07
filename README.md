@@ -15,7 +15,7 @@ Verteilzentrum is a minimalistic mailing list following the [KISS](https://en.wi
 
 # Installation
 0. Install golang (>=1.15), gcc, make and build-essential if you don't have them already
-1. Clone the repository: `git clone https://github.com/bn4t/verteilzentrum.git`
+1. Clone the repository: `git clone https://github.com/baretools/verteilzentrum.git`
 2. Checkout the latest stable tag 
 3. Make sure `go` is in your `$PATH` and run `make build` to build the verteilzentrum binary
 4. Run `sudo make install` to install verteilzentrum on your system. This will create the directories `/etc/verteilzentrum` (config directory) and `/var/lib/verteilzentrum` (data directory). Additionally the user `verteilzentrum` will be created.
